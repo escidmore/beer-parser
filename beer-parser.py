@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-from json import dumps
 from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
 import re
@@ -27,8 +26,12 @@ def get_beers():
 		beer_name = beer_name_header.get_text()
 		beer_name = re.sub("\s\s+", "", beer_name)
 		beer_span = beer_html.find("span",{"class": "style"})
-		beer_style = beer_span.get_text()
+		if beer_span:
+			beer_style = beer_span.get_text()
+		else:
+			beer_style = "None"
 		beers.append({"name": beer_name, "style": beer_style})
+#		beers.append({"name": beer_name, "style": "test"})
 	return(beers)
 
 def non_ipas():
@@ -38,4 +41,5 @@ beers = get_beers()
 
 for beer in beers:
 	if "IPA" not in beer['style']:
-		print(beer['name'] + "\n" + beer['style'] + "\n")
+		if "San Diego Brewing" not in beer['name']:
+			print(beer['name'] + "\n" + beer['style'] + "\n")
